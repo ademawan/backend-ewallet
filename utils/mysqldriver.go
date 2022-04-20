@@ -36,4 +36,7 @@ func InitMigrate(db *gorm.DB) {
 	db.Migrator().DropTable(&entities.User{})
 	db.AutoMigrate(&entities.User{})
 
+	db.Migrator().DropTable(&entities.Transaction{})
+	db.AutoMigrate(&entities.Transaction{})
+
 }
