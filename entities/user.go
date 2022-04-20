@@ -11,7 +11,7 @@ type User struct {
 	Name        string `gorm:"type:varchar(30)" json:"name"`
 	Email       string `gorm:"unique;email" json:"email"`
 	Password    string `json:"-"`
-	PhoneNumber string `gorm:"type:varchar(30)" json:"phone_number"`
+	PhoneNumber string `gorm:"unique;type:varchar(30)" json:"phone_number"`
 
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `gorm:"-" json:"-"`
