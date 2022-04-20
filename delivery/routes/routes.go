@@ -1,14 +1,19 @@
 package routes
 
 import (
+	"backend-ewallet/delivery/controllers/auth"
 	"backend-ewallet/delivery/controllers/user"
+
 	"backend-ewallet/middlewares"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func RegisterPath(e *echo.Echo, uc *user.UserController) {
+func RegisterPath(e *echo.Echo,
+	uc *user.UserController,
+	aa *auth.AuthController,
+) {
 	//CORS
 	e.Use(middleware.CORS())
 
@@ -20,6 +25,8 @@ func RegisterPath(e *echo.Echo, uc *user.UserController) {
 
 	//ROUTE REGISTER - LOGIN USERS
 	e.POST("users/register", uc.Register())
+	e.POST("users/login", aa.Login())
+	e.POST("users/logout", aa.Logout(), middlewares.JwtMiddleware())
 
 	//ROUTE USERS
 	e.GET("/users/me", uc.GetByUid(), middlewares.JwtMiddleware())

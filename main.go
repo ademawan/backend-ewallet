@@ -10,6 +10,9 @@ import (
 	"backend-ewallet/delivery/routes"
 	userRepo "backend-ewallet/repository/user"
 
+	ac "backend-ewallet/delivery/controllers/auth"
+	authRepo "backend-ewallet/repository/auth"
+
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 )
@@ -28,13 +31,15 @@ func main() {
 
 	db := utils.InitDB(config)
 
+	authRepo := authRepo.New(db)
 	userRepo := userRepo.New(db)
 
+	authController := ac.New(authRepo)
 	userController := uc.New(userRepo)
 	e := echo.New()
 	e.Validator = &CustomValidator{validator: validator.New()}
 
-	routes.RegisterPath(e, userController)
+	routes.RegisterPath(e, userController, authController)
 
 	log.Fatal(e.Start(fmt.Sprintf(":%d", config.Port)))
 
