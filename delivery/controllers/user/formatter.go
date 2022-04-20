@@ -3,29 +3,26 @@ package user
 // "gorm.io/gorm"
 
 type UserCreateResponse struct {
-	UserUid     string `json:"user_uid"`
+	UserID      string `json:"user_id"`
 	Name        string `json:"name"`
 	Email       string `json:"email"`
 	PhoneNumber string `json:"phone_number"`
-	Gender      string `json:"gender"`
 	// Roles    bool   `json:"roles"`
 	// Image    string `json:"image"`
 }
 type UserUpdateResponse struct {
-	UserUid     string `json:"user_uid"`
+	UserID      string `json:"user_id"`
 	Name        string `json:"name"`
 	Email       string `json:"email"`
 	PhoneNumber string `json:"phone_number"`
-	Gender      string `json:"gender"`
 	// Roles    bool   `json:"roles"`
 	// Image    string `json:"image"`
 }
 type UserGetByIdResponse struct {
-	UserUid     string `json:"user_uid"`
+	UserID      string `json:"user_id"`
 	Name        string `json:"name"`
 	Email       string `json:"email"`
 	PhoneNumber string `json:"phone_number"`
-	Gender      string `json:"gender"`
 	// Roles    bool   `json:"roles"`
 	// Image    string `json:"image"`
 }
@@ -38,7 +35,6 @@ type CreateUserRequestFormat struct {
 	Email       string `json:"email" form:"email" validate:"required,email"`
 	Password    string `json:"password" form:"password" validate:"required,min=3,max=20"`
 	PhoneNumber string `json:"phone_number" form:"phone_number" validate:"required"`
-	Gender      string `json:"gender" form:"gender" validate:"required,min=4,max=6"`
 	// Image    string `json:"image" form:"image"`
 }
 
@@ -48,6 +44,5 @@ type UpdateUserRequestFormat struct {
 	Email       string `json:"email" form:"email" validate:"omitempty,email"`
 	Password    string `json:"password" form:"password" validate:"omitempty,min=3,max=20"`
 	PhoneNumber string `json:"phone_number" form:"phone_number" validate:"omitempty"`
-	Gender      string `json:"gender" form:"gender" validate:"omitempty,min=4,max=6"`
 	Image       string `json:"image" form:"image"`
 }

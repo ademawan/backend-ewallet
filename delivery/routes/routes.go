@@ -18,6 +18,9 @@ func RegisterPath(e *echo.Echo, uc *user.UserController) {
 		Format: "method=${method}, uri=${uri}, status=${status}",
 	}))
 
+	//ROUTE REGISTER - LOGIN USERS
+	e.POST("users/register", uc.Register())
+
 	//ROUTE USERS
 	e.GET("/users/me", uc.GetByUid(), middlewares.JwtMiddleware())
 	e.PUT("/users/me", uc.Update(), middlewares.JwtMiddleware())

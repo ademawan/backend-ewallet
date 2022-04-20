@@ -2,6 +2,7 @@ package utils
 
 import (
 	"backend-ewallet/configs"
+	"backend-ewallet/entities"
 	"fmt"
 
 	"github.com/labstack/gommon/log"
@@ -32,7 +33,7 @@ func InitDB(config *configs.AppConfig) *gorm.DB {
 }
 
 func InitMigrate(db *gorm.DB) {
-	// db.Migrator().DropTable(&entities.User{})
-	// db.AutoMigrate(&entities.User{})
+	db.Migrator().DropTable(&entities.User{})
+	db.AutoMigrate(&entities.User{})
 
 }

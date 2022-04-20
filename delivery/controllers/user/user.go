@@ -67,7 +67,7 @@ func (ac *UserController) Register() echo.HandlerFunc {
 		}
 
 		response := UserCreateResponse{}
-		response.UserUid = res.UserID
+		response.UserID = res.UserID
 		response.Name = res.Name
 		response.Email = res.Email
 		response.PhoneNumber = res.PhoneNumber
@@ -164,7 +164,7 @@ func (ac *UserController) Update() echo.HandlerFunc {
 		}
 
 		response := UserUpdateResponse{}
-		response.UserUid = res.UserID
+		response.UserID = res.UserID
 		response.Name = res.Name
 		response.Email = res.Email
 		response.PhoneNumber = res.PhoneNumber
