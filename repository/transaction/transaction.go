@@ -30,6 +30,20 @@ func (ur *TransactionRepository) Create(transaction entities.Transaction) (entit
 	return transaction, nil
 }
 
+func (ur *TransactionRepository) Get(userID string) ([]entities.Transaction, error) {
+	arrTransaction := []entities.Transaction{}
+
+	result := ur.database.Where("sender_id =?", userID).First(&arrTransaction)
+	if err := result.Error; err != nil {
+		return arrTransaction, err
+	}
+	if result.RowsAffected == 0 {
+		return arrTransaction, errors.New("record not found")
+	}
+
+	return arrTransaction, nil
+}
+
 func (ur *TransactionRepository) GetByID(transactionID string) (entities.Transaction, error) {
 	arrTransaction := entities.Transaction{}
 
