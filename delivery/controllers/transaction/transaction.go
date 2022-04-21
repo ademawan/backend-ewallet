@@ -3,6 +3,7 @@ package transaction
 import (
 	"backend-ewallet/delivery/controllers/common"
 	"backend-ewallet/entities"
+	"backend-ewallet/middlewares"
 	"backend-ewallet/repository/transaction"
 	"net/http"
 
@@ -57,5 +58,25 @@ func (ac *TransactionController) Create() echo.HandlerFunc {
 
 		return c.JSON(http.StatusCreated, common.ResponseUser(http.StatusCreated, "Success create user", response))
 
+	}
+}
+
+func (ac *TransactionController) GetByUid() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		transactionID := middlewares.ExtractTokenUserID(c)
+
+		res, err := ac.repo.GetByID(transactionID)
+
+		if err != nil {
+			statusCode := http.StatusInternalServerError
+			errorMessage := "There is some problem from the server"
+			if err.Error() == "record not found" {
+				statusCode = http.StatusNotFound
+				errorMessage = err.Error()
+			}
+			return c.JSON(statusCode, common.ResponseUser(http.StatusNotFound, errorMessage, nil))
+		}
+
+		return c.JSON(http.StatusOK, common.ResponseUser(http.StatusOK, "Success get user", res))
 	}
 }
