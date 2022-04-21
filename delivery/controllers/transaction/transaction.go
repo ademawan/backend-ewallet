@@ -80,3 +80,38 @@ func (ac *TransactionController) GetByUid() echo.HandlerFunc {
 		return c.JSON(http.StatusOK, common.ResponseUser(http.StatusOK, "Success get user", res))
 	}
 }
+
+func (ac *TransactionController) Update() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		transactionID := middlewares.ExtractTokenUserID(c)
+		var newTransaction = UpdateTransactionRequestFormat{}
+		c.Bind(&newTransaction)
+
+		err := c.Validate(&newTransaction)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, common.ResponseUser(http.StatusBadRequest, "There is some problem from input", nil))
+		}
+
+		res, err_repo := ac.repo.Update(transactionID, entities.Transaction{
+			SenderID:        newTransaction.SenderID,
+			RecipientID:     newTransaction.RecipientID,
+			RecievedAmount:  newTransaction.RecievedAmount,
+			SentAmount:      newTransaction.SentAmount,
+			TransactionType: newTransaction.TransactionType,
+		})
+
+		if err_repo != nil {
+			return c.JSON(http.StatusInternalServerError, common.ResponseUser(http.StatusInternalServerError, "There is some error on server", nil))
+		}
+
+		response := TransactionUpdateResponse{}
+		response.TransactionID = res.TransactionID
+		response.SenderID = res.SenderID
+		response.RecipientID = res.RecipientID
+		response.RecievedAmount = res.RecievedAmount
+		response.SentAmount = res.SentAmount
+		response.TransactionType = res.TransactionType
+
+		return c.JSON(http.StatusOK, common.ResponseUser(http.StatusOK, "Success update user", response))
+	}
+}
