@@ -56,7 +56,7 @@ func (ac *TransactionController) Create() echo.HandlerFunc {
 	}
 }
 
-func (ac *TransactionController) GetByUid() echo.HandlerFunc {
+func (ac *TransactionController) GetByID() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		transactionID := middlewares.ExtractTokenUserID(c)
 

@@ -2,6 +2,7 @@ package routes
 
 import (
 	"backend-ewallet/delivery/controllers/auth"
+	"backend-ewallet/delivery/controllers/transaction"
 	"backend-ewallet/delivery/controllers/user"
 
 	"backend-ewallet/middlewares"
@@ -12,7 +13,9 @@ import (
 
 func RegisterPath(e *echo.Echo,
 	uc *user.UserController,
-	aa *auth.AuthController,
+	ac *auth.AuthController,
+	tc *transaction.TransactionController,
+
 ) {
 	//CORS
 	e.Use(middleware.CORS())
@@ -25,8 +28,8 @@ func RegisterPath(e *echo.Echo,
 
 	//ROUTE REGISTER - LOGIN USERS
 	e.POST("users/register", uc.Register())
-	e.POST("users/login", aa.Login())
-	e.POST("users/logout", aa.Logout(), middlewares.JwtMiddleware())
+	e.POST("users/login", ac.Login())
+	e.POST("users/logout", ac.Logout(), middlewares.JwtMiddleware())
 
 	//ROUTE USERS
 	e.GET("/users/me", uc.GetByUid(), middlewares.JwtMiddleware())
@@ -34,4 +37,11 @@ func RegisterPath(e *echo.Echo,
 	e.DELETE("/users/me", uc.Delete(), middlewares.JwtMiddleware())
 	e.GET("/users/me/search", uc.Search())
 	// e.GET("/users/me/dummy", uc.Dummy())
+
+	//TRANSACTION CONTROLLER
+	e.POST("users/me/transactions", tc.Create(), middlewares.JwtMiddleware())
+	e.GET("/users/me/transactions", tc.Get(), middlewares.JwtMiddleware())
+	e.GET("/users/me/transactions/:transaction_id", tc.GetByID(), middlewares.JwtMiddleware())
+	e.PUT("/users/me/transactions/:transaction_id", tc.Update(), middlewares.JwtMiddleware())
+	e.DELETE("/users/me/transactions/:transaction_id", tc.Delete(), middlewares.JwtMiddleware())
 }
