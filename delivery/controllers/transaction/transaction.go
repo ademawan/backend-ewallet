@@ -7,21 +7,16 @@ import (
 	"backend-ewallet/repository/transaction"
 	"net/http"
 
-	// utils "todo-list-app/utils/aws_S3"
-
-	// "github.com/aws/aws-sdk-go/aws/session"
 	"github.com/labstack/echo/v4"
 )
 
 type TransactionController struct {
 	repo transaction.Transaction
-	// conn *session.Session
 }
 
-func New(repository transaction.Transaction /*, S3 *session.Session*/) *TransactionController {
+func New(repository transaction.Transaction) *TransactionController {
 	return &TransactionController{
 		repo: repository,
-		// conn: S3,
 	}
 }
 
