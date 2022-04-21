@@ -56,7 +56,7 @@ func (ac *TransactionController) Create() echo.HandlerFunc {
 		response.SentAmount = res.SentAmount
 		response.TransactionType = res.TransactionType
 
-		return c.JSON(http.StatusCreated, common.ResponseUser(http.StatusCreated, "Success create user", response))
+		return c.JSON(http.StatusCreated, common.ResponseUser(http.StatusCreated, "Success create transaction", response))
 
 	}
 }
@@ -77,7 +77,7 @@ func (ac *TransactionController) GetByUid() echo.HandlerFunc {
 			return c.JSON(statusCode, common.ResponseUser(http.StatusNotFound, errorMessage, nil))
 		}
 
-		return c.JSON(http.StatusOK, common.ResponseUser(http.StatusOK, "Success get user", res))
+		return c.JSON(http.StatusOK, common.ResponseUser(http.StatusOK, "Success get transaction", res))
 	}
 }
 
@@ -112,6 +112,19 @@ func (ac *TransactionController) Update() echo.HandlerFunc {
 		response.SentAmount = res.SentAmount
 		response.TransactionType = res.TransactionType
 
-		return c.JSON(http.StatusOK, common.ResponseUser(http.StatusOK, "Success update user", response))
+		return c.JSON(http.StatusOK, common.ResponseUser(http.StatusOK, "Success update transaction", response))
+	}
+}
+
+func (ac *TransactionController) Delete() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		transactionID := middlewares.ExtractTokenUserID(c)
+		err := ac.repo.Delete(transactionID)
+
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, common.ResponseUser(http.StatusInternalServerError, "There is some error on server", nil))
+		}
+
+		return c.JSON(http.StatusOK, common.ResponseUser(http.StatusOK, "Success delete transaction", nil))
 	}
 }
