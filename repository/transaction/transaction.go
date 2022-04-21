@@ -44,10 +44,10 @@ func (ur *TransactionRepository) Get(userID string) ([]entities.Transaction, err
 	return arrTransaction, nil
 }
 
-func (ur *TransactionRepository) GetByID(transactionID string) (entities.Transaction, error) {
+func (ur *TransactionRepository) GetByID(senderID, transactionID string) (entities.Transaction, error) {
 	arrTransaction := entities.Transaction{}
 
-	result := ur.database.Where("transaction_id =?", transactionID).First(&arrTransaction)
+	result := ur.database.Where("transaction_id =? AND sender_id=?", transactionID, senderID).First(&arrTransaction)
 	if err := result.Error; err != nil {
 		return arrTransaction, err
 	}
@@ -59,9 +59,10 @@ func (ur *TransactionRepository) GetByID(transactionID string) (entities.Transac
 }
 
 func (ur *TransactionRepository) Update(transactionID string, newTransaction entities.Transaction) (entities.Transaction, error) {
-
+	userID := newTransaction.SenderID
+	newTransaction.SenderID = ""
 	var transaction entities.Transaction
-	result := ur.database.Where("transaction_id =?", transactionID).First(&transaction)
+	result := ur.database.Where("transaction_id =? AND sender_id =?", transactionID, userID).First(&transaction)
 
 	if result.Error != nil {
 		return entities.Transaction{}, errors.New("failed to update transaction")
@@ -70,16 +71,16 @@ func (ur *TransactionRepository) Update(transactionID string, newTransaction ent
 		return entities.Transaction{}, errors.New("transaction not found")
 	}
 
-	if err := ur.database.Model(&transaction).Where("transaction_id =?", transactionID).Updates(&newTransaction).Error; err != nil {
+	if err := ur.database.Model(&transaction).Where("transaction_id =? AND sender_id =?", transactionID, userID).Updates(&newTransaction).Error; err != nil {
 		return entities.Transaction{}, err
 	}
 
 	return transaction, nil
 }
 
-func (ur *TransactionRepository) Delete(transactionID string) error {
+func (ur *TransactionRepository) Delete(userID, transactionID string) error {
 
-	result := ur.database.Where("transaction_id =?", transactionID).Delete(&entities.Transaction{})
+	result := ur.database.Where("transaction_id =? AND sender_id =?", transactionID, userID).Delete(&entities.Transaction{})
 	if result.Error != nil {
 		return result.Error
 	}

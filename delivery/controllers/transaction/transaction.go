@@ -23,6 +23,7 @@ func New(repository transaction.Transaction) *TransactionController {
 func (ac *TransactionController) Create() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		transaction := CreateTransactionRequestFormat{}
+		userID := middlewares.ExtractTokenUserID(c)
 
 		c.Bind(&transaction)
 		err := c.Validate(&transaction)
@@ -30,6 +31,7 @@ func (ac *TransactionController) Create() echo.HandlerFunc {
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, common.ResponseUser(http.StatusBadRequest, "There is some problem from input", nil))
 		}
+		transaction.SenderID = userID
 
 		res, err_repo := ac.repo.Create(entities.Transaction{
 			SenderID:        transaction.SenderID,
@@ -56,11 +58,32 @@ func (ac *TransactionController) Create() echo.HandlerFunc {
 	}
 }
 
+func (ac *TransactionController) Get() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		userID := middlewares.ExtractTokenUserID(c)
+
+		res, err := ac.repo.Get(userID)
+
+		if err != nil {
+			statusCode := http.StatusInternalServerError
+			errorMessage := "There is some problem from the server"
+			if err.Error() == "record not found" {
+				statusCode = http.StatusNotFound
+				errorMessage = err.Error()
+			}
+			return c.JSON(statusCode, common.ResponseUser(http.StatusNotFound, errorMessage, nil))
+		}
+
+		return c.JSON(http.StatusOK, common.ResponseUser(http.StatusOK, "Success get transaction", res))
+	}
+}
+
 func (ac *TransactionController) GetByID() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		transactionID := middlewares.ExtractTokenUserID(c)
+		userID := middlewares.ExtractTokenUserID(c)
+		transactionID := c.Param("transaction_id")
 
-		res, err := ac.repo.GetByID(transactionID)
+		res, err := ac.repo.GetByID(userID, transactionID)
 
 		if err != nil {
 			statusCode := http.StatusInternalServerError
@@ -78,7 +101,9 @@ func (ac *TransactionController) GetByID() echo.HandlerFunc {
 
 func (ac *TransactionController) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		transactionID := middlewares.ExtractTokenUserID(c)
+		userID := middlewares.ExtractTokenUserID(c)
+		transactionID := c.Param("transaction_id")
+
 		var newTransaction = UpdateTransactionRequestFormat{}
 		c.Bind(&newTransaction)
 
@@ -86,6 +111,7 @@ func (ac *TransactionController) Update() echo.HandlerFunc {
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, common.ResponseUser(http.StatusBadRequest, "There is some problem from input", nil))
 		}
+		newTransaction.SenderID = userID
 
 		res, err_repo := ac.repo.Update(transactionID, entities.Transaction{
 			SenderID:        newTransaction.SenderID,
@@ -113,8 +139,10 @@ func (ac *TransactionController) Update() echo.HandlerFunc {
 
 func (ac *TransactionController) Delete() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		transactionID := middlewares.ExtractTokenUserID(c)
-		err := ac.repo.Delete(transactionID)
+		userID := middlewares.ExtractTokenUserID(c)
+		transactionID := c.Param("transaction_id")
+
+		err := ac.repo.Delete(userID, transactionID)
 
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, common.ResponseUser(http.StatusInternalServerError, "There is some error on server", nil))
