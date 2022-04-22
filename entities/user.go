@@ -12,7 +12,7 @@ type User struct {
 	Email       string `gorm:"unique;email" json:"email"`
 	Password    string `json:"-"`
 	PhoneNumber string `gorm:"unique;type:varchar(30)" json:"phone_number"`
-	Saldo       int
+	Saldo       uint   `json:"saldo"`
 
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `gorm:"-" json:"-"`

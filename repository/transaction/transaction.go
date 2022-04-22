@@ -29,12 +29,12 @@ func (ur *TransactionRepository) Create(transaction entities.Transaction) (entit
 		if err := result.Error; err != nil {
 			return entities.Transaction{}, err
 		}
-		if user.Saldo < transaction.SentAmount {
+		if user.Saldo < transaction.Amount {
 			return entities.Transaction{}, errors.New("saldo tidak cukup")
 		} else {
-			ur.database.Model(entities.User{}).Where("user_id =?", transaction.SenderID).UpdateColumn("saldo", gorm.Expr("saldo - ?", transaction.SentAmount))
+			ur.database.Model(entities.User{}).Where("user_id =?", transaction.SenderID).UpdateColumn("saldo", gorm.Expr("saldo - ?", transaction.Amount))
 
-			res := ur.TransferAmount(transaction.RecipientID, transaction.SentAmount)
+			res := ur.TransferAmount(transaction.RecipientID, transaction.Amount)
 			if res != nil {
 				return entities.Transaction{}, res
 			}
@@ -49,7 +49,7 @@ func (ur *TransactionRepository) Create(transaction entities.Transaction) (entit
 	return entities.Transaction{}, errors.New("tidak dapat di prosses")
 }
 
-func (ur *TransactionRepository) TransferAmount(RecipientID string, amount int) error {
+func (ur *TransactionRepository) TransferAmount(RecipientID string, amount uint) error {
 
 	if err := ur.database.Model(entities.User{}).Where("user_id =?", RecipientID).UpdateColumn("saldo", gorm.Expr("saldo + ?", amount)).Error; err != nil {
 		return errors.New("failed")

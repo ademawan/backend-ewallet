@@ -36,8 +36,6 @@ func (ac *TransactionController) Create() echo.HandlerFunc {
 		res, err_repo := ac.repo.Create(entities.Transaction{
 			SenderID:        transaction.SenderID,
 			RecipientID:     transaction.RecipientID,
-			RecievedAmount:  transaction.RecievedAmount,
-			SentAmount:      transaction.SentAmount,
 			TransactionType: transaction.TransactionType,
 		})
 
@@ -49,8 +47,6 @@ func (ac *TransactionController) Create() echo.HandlerFunc {
 		response.TransactionID = res.TransactionID
 		response.SenderID = res.SenderID
 		response.RecipientID = res.RecipientID
-		response.RecievedAmount = res.RecievedAmount
-		response.SentAmount = res.SentAmount
 		response.TransactionType = res.TransactionType
 
 		return c.JSON(http.StatusCreated, common.ResponseUser(http.StatusCreated, "Success create transaction", response))
@@ -116,8 +112,6 @@ func (ac *TransactionController) Update() echo.HandlerFunc {
 		res, err_repo := ac.repo.Update(transactionID, entities.Transaction{
 			SenderID:        newTransaction.SenderID,
 			RecipientID:     newTransaction.RecipientID,
-			RecievedAmount:  newTransaction.RecievedAmount,
-			SentAmount:      newTransaction.SentAmount,
 			TransactionType: newTransaction.TransactionType,
 		})
 
@@ -129,8 +123,6 @@ func (ac *TransactionController) Update() echo.HandlerFunc {
 		response.TransactionID = res.TransactionID
 		response.SenderID = res.SenderID
 		response.RecipientID = res.RecipientID
-		response.RecievedAmount = res.RecievedAmount
-		response.SentAmount = res.SentAmount
 		response.TransactionType = res.TransactionType
 
 		return c.JSON(http.StatusOK, common.ResponseUser(http.StatusOK, "Success update transaction", response))

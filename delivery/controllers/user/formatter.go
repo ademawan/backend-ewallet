@@ -7,6 +7,8 @@ type UserCreateResponse struct {
 	Name        string `json:"name"`
 	Email       string `json:"email"`
 	PhoneNumber string `json:"phone_number"`
+	Saldo       string `json:"saldo"`
+
 	// Roles    bool   `json:"roles"`
 	// Image    string `json:"image"`
 }
@@ -15,6 +17,7 @@ type UserUpdateResponse struct {
 	Name        string `json:"name"`
 	Email       string `json:"email"`
 	PhoneNumber string `json:"phone_number"`
+	Saldo       string `json:"saldo"`
 	// Roles    bool   `json:"roles"`
 	// Image    string `json:"image"`
 }
@@ -23,6 +26,8 @@ type UserGetByIdResponse struct {
 	Name        string `json:"name"`
 	Email       string `json:"email"`
 	PhoneNumber string `json:"phone_number"`
+	Saldo       string `json:"saldo"`
+
 	// Roles    bool   `json:"roles"`
 	// Image    string `json:"image"`
 }
