@@ -23,11 +23,39 @@ func (ur *TransactionRepository) Create(transaction entities.Transaction) (entit
 	uid := shortuuid.New()
 	transaction.TransactionID = uid
 
-	if err := ur.database.Create(&transaction).Error; err != nil {
-		return transaction, errors.New("invalid input or this email was created (duplicated entry)")
+	if transaction.TransactionType == "transfer" {
+		var user entities.User
+		result := ur.database.Model(entities.User{}).Where("user_id=?", transaction.SenderID).First(&user)
+		if err := result.Error; err != nil {
+			return entities.Transaction{}, err
+		}
+		if user.Saldo < transaction.SentAmount {
+			return entities.Transaction{}, errors.New("saldo tidak cukup")
+		} else {
+			ur.database.Model(entities.User{}).Where("user_id =?", transaction.SenderID).UpdateColumn("saldo", gorm.Expr("saldo - ?", transaction.SentAmount))
+
+			res := ur.TransferAmount(transaction.RecipientID, transaction.SentAmount)
+			if res != nil {
+				return entities.Transaction{}, res
+			}
+
+			if err := ur.database.Create(&transaction).Error; err != nil {
+				return transaction, errors.New("transaction failed")
+			}
+			return transaction, nil
+		}
 	}
 
-	return transaction, nil
+	return entities.Transaction{}, errors.New("tidak dapat di prosses")
+}
+
+func (ur *TransactionRepository) TransferAmount(RecipientID string, amount int) error {
+
+	if err := ur.database.Model(entities.User{}).Where("user_id =?", RecipientID).UpdateColumn("saldo", gorm.Expr("saldo + ?", amount)).Error; err != nil {
+		return errors.New("failed")
+	}
+
+	return nil
 }
 
 func (ur *TransactionRepository) Get(userID string) ([]entities.Transaction, error) {
