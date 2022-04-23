@@ -74,6 +74,45 @@ func (ac *TransactionController) Get() echo.HandlerFunc {
 	}
 }
 
+func (ac *TransactionController) GetTransactionSend() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		userID := middlewares.ExtractTokenUserID(c)
+
+		res, err := ac.repo.GetTransactionSend(userID)
+
+		if err != nil {
+			statusCode := http.StatusInternalServerError
+			errorMessage := "There is some problem from the server"
+			if err.Error() == "record not found" {
+				statusCode = http.StatusNotFound
+				errorMessage = err.Error()
+			}
+			return c.JSON(statusCode, common.ResponseUser(http.StatusNotFound, errorMessage, nil))
+		}
+
+		return c.JSON(http.StatusOK, common.ResponseUser(http.StatusOK, "Success get transaction", res))
+	}
+}
+func (ac *TransactionController) GetTransactionReceived() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		userID := middlewares.ExtractTokenUserID(c)
+
+		res, err := ac.repo.GetTransactionReceived(userID)
+
+		if err != nil {
+			statusCode := http.StatusInternalServerError
+			errorMessage := "There is some problem from the server"
+			if err.Error() == "record not found" {
+				statusCode = http.StatusNotFound
+				errorMessage = err.Error()
+			}
+			return c.JSON(statusCode, common.ResponseUser(http.StatusNotFound, errorMessage, nil))
+		}
+
+		return c.JSON(http.StatusOK, common.ResponseUser(http.StatusOK, "Success get transaction", res))
+	}
+}
+
 func (ac *TransactionController) GetByID() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		userID := middlewares.ExtractTokenUserID(c)
