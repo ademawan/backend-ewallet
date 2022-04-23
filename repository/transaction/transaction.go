@@ -70,7 +70,33 @@ func (ur *TransactionRepository) TransferAmount(RecipientID string, amount uint)
 func (ur *TransactionRepository) Get(userID string) ([]entities.Transaction, error) {
 	arrTransaction := []entities.Transaction{}
 
-	result := ur.database.Where("sender_id =?", userID).First(&arrTransaction)
+	result := ur.database.Where("sender_id =? OR recipient_id =?", userID).Find(&arrTransaction)
+	if err := result.Error; err != nil {
+		return arrTransaction, err
+	}
+	if result.RowsAffected == 0 {
+		return arrTransaction, errors.New("record not found")
+	}
+
+	return arrTransaction, nil
+}
+func (ur *TransactionRepository) GetTransactionSend(userID string) ([]entities.Transaction, error) {
+	arrTransaction := []entities.Transaction{}
+
+	result := ur.database.Where("sender_id =?", userID).Find(&arrTransaction)
+	if err := result.Error; err != nil {
+		return arrTransaction, err
+	}
+	if result.RowsAffected == 0 {
+		return arrTransaction, errors.New("record not found")
+	}
+
+	return arrTransaction, nil
+}
+func (ur *TransactionRepository) GetTransactionReceived(userID string) ([]entities.Transaction, error) {
+	arrTransaction := []entities.Transaction{}
+
+	result := ur.database.Where("recipient_id =?", userID).Find(&arrTransaction)
 	if err := result.Error; err != nil {
 		return arrTransaction, err
 	}
