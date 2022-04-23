@@ -37,6 +37,7 @@ func RegisterPath(e *echo.Echo,
 	e.DELETE("/users/me", uc.Delete(), middlewares.JwtMiddleware())
 	e.GET("/users/me/search", uc.Search())
 	// e.GET("/users/me/dummy", uc.Dummy())
+	//df
 
 	//TRANSACTION CONTROLLER
 	e.POST("users/me/transactions", tc.Create(), middlewares.JwtMiddleware())
