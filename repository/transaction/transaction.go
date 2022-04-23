@@ -19,6 +19,9 @@ func New(db *gorm.DB) *TransactionRepository {
 }
 
 func (ur *TransactionRepository) Create(transaction entities.Transaction) (entities.Transaction, error) {
+	if transaction.Amount <= 0 {
+		return entities.Transaction{}, errors.New("transfer failed")
+	}
 
 	uid := shortuuid.New()
 	transaction.TransactionID = uid
@@ -70,7 +73,7 @@ func (ur *TransactionRepository) TransferAmount(RecipientID string, amount uint)
 func (ur *TransactionRepository) Get(userID string) ([]entities.Transaction, error) {
 	arrTransaction := []entities.Transaction{}
 
-	result := ur.database.Where("sender_id =? OR recipient_id =?", userID).Find(&arrTransaction)
+	result := ur.database.Where("sender_id =? OR recipient_id =?", userID, userID).Find(&arrTransaction)
 	if err := result.Error; err != nil {
 		return arrTransaction, err
 	}

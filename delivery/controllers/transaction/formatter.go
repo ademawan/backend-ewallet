@@ -21,7 +21,7 @@ type TransactionGetByIdResponse struct {
 // =================== Create Transaction Request =======================
 type CreateTransactionRequestFormat struct {
 	SenderID        string
-	RecipientID     string `json:"recipient_id" form:"recipient_id"`
-	Amount          uint   `json:"amount" form:"amount"`
-	TransactionType string `json:"transaction_type"`
+	RecipientID     string `json:"recipient_id" form:"recipient_id" validate:"required"`
+	Amount          uint   `json:"amount" form:"amount" validate:"required,excludesall=!@#?^*()_+-=%&/\\$"`
+	TransactionType string `json:"transaction_type" validate:"required"`
 }
