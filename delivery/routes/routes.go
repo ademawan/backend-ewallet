@@ -42,4 +42,6 @@ func RegisterPath(e *echo.Echo,
 	e.POST("users/me/transactions", tc.Create(), middlewares.JwtMiddleware())
 	e.GET("/users/me/transactions", tc.Get(), middlewares.JwtMiddleware())
 	e.GET("/users/me/transactions/:transaction_id", tc.GetByID(), middlewares.JwtMiddleware())
+	e.GET("/users/me/transactions/received", tc.GetReceived(), middlewares.JwtMiddleware())
+	e.GET("/users/me/transactions/send", tc.GetSend(), middlewares.JwtMiddleware())
 }
