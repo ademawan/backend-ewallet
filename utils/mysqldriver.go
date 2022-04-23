@@ -29,6 +29,8 @@ func InitDB(config *configs.AppConfig) *gorm.DB {
 	// }
 
 	// InitMigrate(db)
+
+	//    postgres://tyenpjggpurdgd:4669642a7071c32c708ceaeaf99680615aed39bfc2712638df1985739b318ef2@ec2-34-194-158-176.compute-1.amazonaws.com:5432/d3514je8tibhi9
 	DBURL := fmt.Sprintf("postgres://%s:%v@%s:%s/%s", config.Database.Username, config.Database.Password, config.Database.Address, config.Database.Port, config.Database.Name)
 	db, err := gorm.Open(postgres.Open(DBURL), &gorm.Config{})
 	if err != nil {
