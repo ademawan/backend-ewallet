@@ -1,0 +1,19 @@
+services:
+  app:
+    build: .
+    environment:
+      PORT: 8000
+      DRIVER: "mysql"
+      ADDRESS: "ec2-34-194-158-176.compute-1.amazonaws.com"
+      DB_PORT: 5432
+      USERNAME: "tyenpjggpurdgd"
+      PASSWORD: "4669642a7071c32c708ceaeaf99680615aed39bfc2712638df1985739b318ef2"
+      NAME: "d3514je8tibhi9"
+    restart: always
+    ports:
+      - 8081:8000
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 9000:8080
