@@ -8,13 +8,6 @@ type TransactionCreateResponse struct {
 	TransactionType string `json:"transaction_type"`
 }
 
-type TransactionUpdateResponse struct {
-	TransactionID   string `json:"transaction_id"`
-	SenderID        string `json:"sender_id"`
-	RecipientID     string `json:"recipient_id"`
-	Amount          uint   `json:"amount"`
-	TransactionType string `json:"transaction_type"`
-}
 type TransactionGetByIdResponse struct {
 	TransactionID   string `json:"transaction_id"`
 	SenderID        string `json:"sender_id"`
@@ -25,16 +18,8 @@ type TransactionGetByIdResponse struct {
 
 //=========================================================
 
-// =================== Create User Request =======================
+// =================== Create Transaction Request =======================
 type CreateTransactionRequestFormat struct {
-	SenderID        string
-	RecipientID     string `json:"recipient_id" form:"recipient_id"`
-	Amount          uint   `json:"amount" form:"amount"`
-	TransactionType string `json:"transaction_type"`
-}
-
-// =================== Update User Request =======================
-type UpdateTransactionRequestFormat struct {
 	SenderID        string
 	RecipientID     string `json:"recipient_id" form:"recipient_id"`
 	Amount          uint   `json:"amount" form:"amount"`
