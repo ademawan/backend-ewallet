@@ -19,7 +19,7 @@ spec:
         name: go-app
         env:
           - name: "PORT"
-            value: "8000"
+            value: ${PORT}
           - name: "DRIVER"
             value: "postgres"
           - name: "ADDRESS"
@@ -27,11 +27,11 @@ spec:
           - name: "DB_PORT"
             value: "5432"
           - name: "USERNAME"
-            value: "tyenpjggpurdgd"
+            value: ${DB_USERNAME}
           - name: "PASSWORD"
-            value: "4669642a7071c32c708ceaeaf99680615aed39bfc2712638df1985739b318ef2"
+            value: ${DB_PASSWORD}
           - name: "NAME"
-            value: "d3514je8tibhi9"
+            value: ${DB_NAME}
           - name: "LOC"
             value: "Asia%2FJakarta"    
         ports:

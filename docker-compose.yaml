@@ -2,13 +2,13 @@ services:
   app:
     build: .
     environment:
-      PORT: 8000
+      PORT: ${PORT}
       DRIVER: "posgres"
       ADDRESS: ${DB_HOST}
       DB_PORT: 5432
-      USERNAME: "tyenpjggpurdgd"
-      PASSWORD: "4669642a7071c32c708ceaeaf99680615aed39bfc2712638df1985739b318ef2"
-      NAME: "d3514je8tibhi9"
+      USERNAME: ${DB_USERNAME}
+      PASSWORD: ${DB_PASSWORD}
+      NAME: ${DB_NAME}
     restart: always
     ports:
       - 8081:8000
