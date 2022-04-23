@@ -1,21 +1,64 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment
-  labels:
-    app: nginx
+      name: go-app-deployment
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: nginx
+      app: go-app
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
-        app: nginx
+        app: go-app
     spec:
       containers:
-      - name: nginx
-        image: nginx:1.14.2
+      - image: mawan1122/backend-ewallet-hub:latest
+        name: go-app
+        env:
+          - name: "PORT"
+            value: "8000"
+          - name: "DRIVER"
+            value: "postgres"
+          - name: "ADDRESS"
+            value: "dec2-34-194-158-176.compute-1.amazonaws.com"
+          - name: "DB_PORT"
+            value: "5432"
+          - name: "USERNAME"
+            value: "tyenpjggpurdgd"
+          - name: "PASSWORD"
+            value: "4669642a7071c32c708ceaeaf99680615aed39bfc2712638df1985739b318ef2"
+          - name: "NAME"
+            value: "d3514je8tibhi9"
+          - name: "LOC"
+            value: "Asia%2FJakarta"    
         ports:
-        - containerPort: 80 # port dari pod
+           - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-app-service
+spec:
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8000
+  selector:
+    app: go-app
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: go-app-ingress
+  annotations:
+    dev.okteto.com/generate-host: "domain"
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: go-app-service
+          servicePort: 8080
