@@ -2,7 +2,7 @@ services:
   app:
     build: .
     environment:
-      PORT: ${PORT}
+      PORT: 8000
       DRIVER: "posgres"
       ADDRESS: ${DB_HOST}
       DB_PORT: 5432
