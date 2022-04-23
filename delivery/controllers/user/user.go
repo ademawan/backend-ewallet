@@ -72,6 +72,7 @@ func (ac *UserController) Register() echo.HandlerFunc {
 		response.Email = res.Email
 		response.PhoneNumber = res.PhoneNumber
 		// response.Roles = res.Roles
+		//ss
 		// response.Image = res.Image
 
 		return c.JSON(http.StatusCreated, common.ResponseUser(http.StatusCreated, "Success create user", response))
