@@ -276,3 +276,27 @@ func (cont *TransactionController) CallBack() echo.HandlerFunc {
 
 	}
 }
+
+func (cont *TransactionController) TopUp() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var payment TopUpRequest
+		userID := middlewares.ExtractTokenUserID(c)
+
+		c.Bind(&payment)
+		errValidate := c.Validate(&payment)
+
+		if errValidate != nil {
+			return c.JSON(http.StatusBadRequest, common.ResponseUser(http.StatusBadRequest, "There is some problem from input", nil))
+		}
+
+		res, err := cont.repo.Create(entities.Transaction{SenderID: "", RecipientID: userID, TransactionType: "topup", Amount: uint(payment.Amount)})
+
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, common.ResponseUser(http.StatusInternalServerError, "failed topup", nil))
+
+		}
+
+		return c.JSON(http.StatusOK, common.ResponseUser(http.StatusOK, "Success create payment", res))
+
+	}
+}

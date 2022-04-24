@@ -56,6 +56,9 @@ type PaymentTypeRequest struct {
 	Payment_method string `json:"payment_method" validate:"required"`
 	Amount         int64  `json:"amount" validate:"required"`
 }
+type TopUpRequest struct {
+	Amount uint `json:"amount" validate:"required"`
+}
 
 type RequestCallBackMidtrans struct {
 	Transaction_time   string `json:"transaction_time"`
