@@ -17,6 +17,8 @@ import (
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
+
+	"github.com/midtrans/midtrans-go/coreapi"
 )
 
 type CustomValidator struct {
@@ -28,6 +30,7 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 }
 
 func main() {
+	mt := coreapi.Client{}
 
 	config := configs.GetConfig()
 
@@ -39,7 +42,7 @@ func main() {
 
 	authController := ac.New(authRepo)
 	userController := uc.New(userRepo)
-	transactionController := tc.New(transactionRepo)
+	transactionController := tc.New(transactionRepo, mt)
 
 	e := echo.New()
 	e.Validator = &CustomValidator{validator: validator.New()}

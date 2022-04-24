@@ -8,15 +8,18 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/midtrans/midtrans-go/coreapi"
 )
 
 type TransactionController struct {
 	repo transaction.Transaction
+	mt   coreapi.Client
 }
 
-func New(repository transaction.Transaction) *TransactionController {
+func New(repository transaction.Transaction, mt coreapi.Client) *TransactionController {
 	return &TransactionController{
 		repo: repository,
+		mt:   mt,
 	}
 }
 
