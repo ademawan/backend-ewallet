@@ -240,3 +240,36 @@ func (cont *TransactionController) CreatePayment() echo.HandlerFunc {
 
 	}
 }
+func (cont *BookingController) CallBack() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var request RequestCallBackMidtrans
+		// user_uid := middlewares.ExtractTokenId(c)
+
+		if err := c.Bind(&request); err != nil {
+			return c.JSON(http.StatusInternalServerError, templates.InternalServerError(http.StatusInternalServerError, "Failed to create payment", nil))
+		}
+
+		res, err := cont.repo.GetByIdMt(request.Order_id)
+
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, templates.InternalServerError(http.StatusInternalServerError, "internal server eror for get booking by id "+err.Error(), nil))
+		}
+
+		switch request.Transaction_status {
+		case "settlement":
+			cont.repo.Update(res.User_uid, request.Order_id, booking.BookingReq{Status: "paid"})
+		case "failure":
+			cont.repo.Update(res.User_uid, request.Order_id, booking.BookingReq{Status: "waiting"})
+		case "cancel":
+			cont.repo.Update(res.User_uid, request.Order_id, booking.BookingReq{Status: "waiting"})
+
+		}
+
+		// var strDebug string
+		// strDebug = spew.Sdump(request)
+		// ZapLogger.Info(`request: ` + strDebug)
+
+		return c.JSON(http.StatusOK, templates.Success(http.StatusOK, "Success create payment booking", request))
+
+	}
+}
