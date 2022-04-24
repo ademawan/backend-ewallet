@@ -19,4 +19,5 @@ type Transaction struct {
 }
 
 //RecievedAmount  uint   `gorm:"type:int(30)" json:"recieved_amount"`
+//RecievedAmount  uint   `gorm:"type:int(30)" json:"recieved_amount"`
 //	SentAmount      uint   `gorm:"type:int(30)" json:"sent_amount"`
