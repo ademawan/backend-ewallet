@@ -74,11 +74,11 @@ func (ur *TransactionRepository) Get(userID string) ([]entities.Transaction, err
 	arrTransaction := []entities.Transaction{}
 
 	result := ur.database.Where("sender_id =? OR recipient_id =?", userID, userID).Find(&arrTransaction)
-	if err := result.Error; err != nil {
-		return arrTransaction, err
-	}
 	if result.RowsAffected == 0 {
 		return arrTransaction, errors.New("record not found")
+	}
+	if err := result.Error; err != nil {
+		return arrTransaction, err
 	}
 
 	return arrTransaction, nil
@@ -87,11 +87,11 @@ func (ur *TransactionRepository) GetTransactionSend(userID string) ([]entities.T
 	arrTransaction := []entities.Transaction{}
 
 	result := ur.database.Where("sender_id =?", userID).Find(&arrTransaction)
-	if err := result.Error; err != nil {
-		return arrTransaction, err
-	}
 	if result.RowsAffected == 0 {
 		return arrTransaction, errors.New("record not found")
+	}
+	if err := result.Error; err != nil {
+		return arrTransaction, err
 	}
 
 	return arrTransaction, nil
@@ -100,11 +100,11 @@ func (ur *TransactionRepository) GetTransactionReceived(userID string) ([]entiti
 	arrTransaction := []entities.Transaction{}
 
 	result := ur.database.Where("recipient_id =?", userID).Find(&arrTransaction)
-	if err := result.Error; err != nil {
-		return arrTransaction, err
-	}
 	if result.RowsAffected == 0 {
 		return arrTransaction, errors.New("record not found")
+	}
+	if err := result.Error; err != nil {
+		return arrTransaction, err
 	}
 
 	return arrTransaction, nil
@@ -114,11 +114,11 @@ func (ur *TransactionRepository) GetByID(senderID, transactionID string) (entiti
 	arrTransaction := entities.Transaction{}
 
 	result := ur.database.Where("transaction_id =? AND sender_id=?", transactionID, senderID).First(&arrTransaction)
-	if err := result.Error; err != nil {
-		return arrTransaction, err
-	}
 	if result.RowsAffected == 0 {
 		return arrTransaction, errors.New("record not found")
+	}
+	if err := result.Error; err != nil {
+		return arrTransaction, err
 	}
 
 	return arrTransaction, nil
