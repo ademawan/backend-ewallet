@@ -42,7 +42,7 @@ func main() {
 
 	authController := ac.New(authRepo)
 	userController := uc.New(userRepo)
-	transactionController := tc.New(transactionRepo, mt)
+	transactionController := tc.New(transactionRepo, mt, userRepo)
 
 	e := echo.New()
 	e.Validator = &CustomValidator{validator: validator.New()}
