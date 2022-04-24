@@ -56,7 +56,7 @@ func (ur *TransactionRepository) Create(transaction entities.Transaction) (entit
 	} else if transaction.TransactionType == "topup" {
 		err := ur.database.Transaction(func(tx *gorm.DB) error {
 			var user entities.User
-			result := tx.Model(entities.User{}).Where("user_id=?", transaction.SenderID).First(&user)
+			result := tx.Model(entities.User{}).Where("user_id=?", transaction.RecipientID).First(&user)
 			if err := result.Error; err != nil {
 				return err
 			}
