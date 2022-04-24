@@ -18,7 +18,6 @@ func RegisterPath(e *echo.Echo,
 
 ) {
 	//CORS
-	e.Use(middleware.CORS())
 
 	//LOGGER
 	e.Pre(middleware.RemoveTrailingSlash())
