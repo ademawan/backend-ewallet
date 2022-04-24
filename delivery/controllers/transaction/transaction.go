@@ -289,7 +289,7 @@ func (cont *TransactionController) TopUp() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, common.ResponseUser(http.StatusBadRequest, "There is some problem from input", nil))
 		}
 
-		res, err := cont.repo.Create(entities.Transaction{SenderID: "", RecipientID: userID, TransactionType: "topup", Amount: uint(payment.Amount)})
+		res, err := cont.repo.Create(entities.Transaction{SenderID: "", RecipientID: userID, TransactionType: "topup", Amount: payment.Amount})
 
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, common.ResponseUser(http.StatusInternalServerError, "failed topup", nil))
