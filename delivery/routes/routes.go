@@ -32,7 +32,7 @@ func RegisterPath(e *echo.Echo,
 	e.POST("users/logout", ac.Logout(), middlewares.JwtMiddleware())
 
 	//ROUTE USERS
-	e.GET("/users/me", uc.GetByUid(), middlewares.JwtMiddleware())
+	e.GET("/users/me", uc.GetByID(), middlewares.JwtMiddleware())
 	e.PUT("/users/me", uc.Update(), middlewares.JwtMiddleware())
 	e.DELETE("/users/me", uc.Delete(), middlewares.JwtMiddleware())
 	e.GET("/users/me/search", uc.Search())

@@ -32,10 +32,10 @@ func (ur *UserRepository) Register(user entities.User) (entities.User, error) {
 	return user, nil
 }
 
-func (ur *UserRepository) GetByUid(userUid string) (entities.User, error) {
+func (ur *UserRepository) GetByID(userID string) (entities.User, error) {
 	arrUser := entities.User{}
 
-	result := ur.database.Where("user_uid =?", userUid).First(&arrUser)
+	result := ur.database.Where("user_id =?", userID).First(&arrUser)
 	if err := result.Error; err != nil {
 		return arrUser, err
 	}

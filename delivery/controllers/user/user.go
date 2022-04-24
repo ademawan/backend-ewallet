@@ -80,11 +80,11 @@ func (ac *UserController) Register() echo.HandlerFunc {
 	}
 }
 
-func (ac *UserController) GetByUid() echo.HandlerFunc {
+func (ac *UserController) GetByID() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		userUid := middlewares.ExtractTokenUserID(c)
 
-		res, err := ac.repo.GetByUid(userUid)
+		res, err := ac.repo.GetByID(userUid)
 
 		if err != nil {
 			statusCode := http.StatusInternalServerError
