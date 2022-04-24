@@ -8,8 +8,10 @@ import (
 	"backend-ewallet/repository/user"
 	"backend-ewallet/utils"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
+	"github.com/lithammer/shortuuid"
 	"github.com/midtrans/midtrans-go"
 	"github.com/midtrans/midtrans-go/coreapi"
 )
@@ -152,10 +154,7 @@ func (cont *TransactionController) CreatePayment() echo.HandlerFunc {
 			return c.JSON(http.StatusInternalServerError, common.ResponseUser(http.StatusInternalServerError, "Your booking is not found", nil))
 		}
 
-		resPayment, errPayment := cont.repo.CreatePayment(userID)
-		if errPayment != nil {
-			return c.JSON(http.StatusInternalServerError, common.ResponseUser(http.StatusInternalServerError, "Your booking is not found", nil))
-		}
+		uid := shortuuid.New()
 
 		switch payment.Payment_method {
 		case "gopay":
@@ -163,12 +162,12 @@ func (cont *TransactionController) CreatePayment() echo.HandlerFunc {
 				PaymentType: coreapi.PaymentTypeGopay,
 
 				TransactionDetails: midtrans.TransactionDetails{
-					OrderID:  booking_uid,
-					GrossAmt: payment.Amount,
+					OrderID:  uid,
+					GrossAmt: int64(payment.Amount),
 				},
 				Items: &[]midtrans.ItemDetails{
 					{
-						ID:    booking_uid,
+						ID:    userID,
 						Name:  resUser.Name,
 						Price: int64(payment.Amount),
 						Qty:   1,
@@ -181,12 +180,12 @@ func (cont *TransactionController) CreatePayment() echo.HandlerFunc {
 				PaymentType: coreapi.PaymentTypeShopeepay,
 
 				TransactionDetails: midtrans.TransactionDetails{
-					OrderID:  booking_uid,
-					GrossAmt: payment.Amount,
+					OrderID:  uid,
+					GrossAmt: int64(payment.Amount),
 				},
 				Items: &[]midtrans.ItemDetails{
 					{
-						ID:    booking_uid,
+						ID:    userID,
 						Name:  resUser.Name,
 						Price: int64(payment.Amount),
 						Qty:   1,
@@ -207,12 +206,12 @@ func (cont *TransactionController) CreatePayment() echo.HandlerFunc {
 				PaymentType: coreapi.PaymentTypeQris,
 
 				TransactionDetails: midtrans.TransactionDetails{
-					OrderID:  booking_uid,
-					GrossAmt: payment.Amount,
+					OrderID:  uid,
+					GrossAmt: int64(payment.Amount),
 				},
 				Items: &[]midtrans.ItemDetails{
 					{
-						ID:    booking_uid,
+						ID:    userID,
 						Name:  resUser.Name,
 						Price: int64(payment.Amount),
 						Qty:   1,
@@ -250,28 +249,23 @@ func (cont *TransactionController) CallBack() echo.HandlerFunc {
 		if err := c.Bind(&request); err != nil {
 			return c.JSON(http.StatusInternalServerError, common.ResponseUser(http.StatusInternalServerError, "Failed to create payment", nil))
 		}
-
-		res, err := cont.repo.GetByIdMt(request.Order_id)
-
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, common.ResponseUser(http.StatusInternalServerError, "internal server eror for get booking by id "+err.Error(), nil))
-		}
-
+		amount, _ := strconv.Atoi(request.Gross_amount)
+		response := entities.Transaction{}
 		switch request.Transaction_status {
 		case "settlement":
-			cont.repo.Update(res.User_uid, request.Order_id, booking.BookingReq{Status: "paid"})
-		case "failure":
-			cont.repo.Update(res.User_uid, request.Order_id, booking.BookingReq{Status: "waiting"})
-		case "cancel":
-			cont.repo.Update(res.User_uid, request.Order_id, booking.BookingReq{Status: "waiting"})
+			res, err := cont.repo.Create(entities.Transaction{SenderID: request.Transaction_id, RecipientID: request.Order_id, TransactionType: "topup", Amount: uint(amount)})
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, common.ResponseUser(http.StatusInternalServerError, "try again later", nil))
 
+			}
+			response = res
 		}
 
 		// var strDebug string
 		// strDebug = spew.Sdump(request)
 		// ZapLogger.Info(`request: ` + strDebug)
 
-		return c.JSON(http.StatusOK, common.ResponseUser(http.StatusOK, "Success create payment booking", request))
+		return c.JSON(http.StatusOK, common.ResponseUser(http.StatusOK, "Success topup", response))
 
 	}
 }

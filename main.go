@@ -18,6 +18,7 @@ import (
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 
+	"github.com/midtrans/midtrans-go"
 	"github.com/midtrans/midtrans-go/coreapi"
 )
 
@@ -39,6 +40,7 @@ func main() {
 	authRepo := authRepo.New(db)
 	userRepo := userRepo.New(db)
 	transactionRepo := transactionRepo.New(db)
+	mt.New("SB-Mid-server-JBHsEAxon8tX0Ui1l4cvMLtM", midtrans.Sandbox)
 
 	authController := ac.New(authRepo)
 	userController := uc.New(userRepo)
