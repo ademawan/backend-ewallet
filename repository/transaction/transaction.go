@@ -53,8 +53,26 @@ func (ur *TransactionRepository) Create(transaction entities.Transaction) (entit
 		if err != nil {
 			return entities.Transaction{}, err
 		}
+	} else if transaction.TransactionType == "topup" {
+		err := ur.database.Transaction(func(tx *gorm.DB) error {
+			var user entities.User
+			result := tx.Model(entities.User{}).Where("user_id=?", transaction.SenderID).First(&user)
+			if err := result.Error; err != nil {
+				return err
+			}
+
+			if err := tx.Model(entities.User{}).Where("user_id =?", transaction.RecipientID).UpdateColumn("saldo", gorm.Expr("saldo + ?", transaction.Amount)).Error; err != nil {
+				return errors.New("transfer failed")
+			}
+
+			return nil
+		})
+		if err != nil {
+			return entities.Transaction{}, err
+		}
+
 	} else {
-		return entities.Transaction{}, errors.New("service not found")
+		return entities.Transaction{}, errors.New("payment type not allowed")
 
 	}
 
