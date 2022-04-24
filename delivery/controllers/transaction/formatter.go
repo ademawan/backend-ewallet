@@ -54,7 +54,7 @@ type PaymentResponse struct {
 
 type PaymentTypeRequest struct {
 	Payment_method string `json:"payment_method" validate:"required"`
-	Amount         uint64 `json:"amount" validate:"required"`
+	Amount         int64  `json:"amount" validate:"required"`
 }
 
 type RequestCallBackMidtrans struct {

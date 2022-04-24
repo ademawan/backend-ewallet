@@ -163,13 +163,13 @@ func (cont *TransactionController) CreatePayment() echo.HandlerFunc {
 
 				TransactionDetails: midtrans.TransactionDetails{
 					OrderID:  uid,
-					GrossAmt: int64(payment.Amount),
+					GrossAmt: payment.Amount,
 				},
 				Items: &[]midtrans.ItemDetails{
 					{
 						ID:    userID,
 						Name:  resUser.Name,
-						Price: int64(payment.Amount),
+						Price: payment.Amount,
 						Qty:   1,
 					},
 				},
@@ -181,13 +181,13 @@ func (cont *TransactionController) CreatePayment() echo.HandlerFunc {
 
 				TransactionDetails: midtrans.TransactionDetails{
 					OrderID:  uid,
-					GrossAmt: int64(payment.Amount),
+					GrossAmt: payment.Amount,
 				},
 				Items: &[]midtrans.ItemDetails{
 					{
 						ID:    userID,
 						Name:  resUser.Name,
-						Price: int64(payment.Amount),
+						Price: payment.Amount,
 						Qty:   1,
 					},
 				},
@@ -207,13 +207,13 @@ func (cont *TransactionController) CreatePayment() echo.HandlerFunc {
 
 				TransactionDetails: midtrans.TransactionDetails{
 					OrderID:  uid,
-					GrossAmt: int64(payment.Amount),
+					GrossAmt: payment.Amount,
 				},
 				Items: &[]midtrans.ItemDetails{
 					{
 						ID:    userID,
 						Name:  resUser.Name,
-						Price: int64(payment.Amount),
+						Price: payment.Amount,
 						Qty:   1,
 					},
 				},
