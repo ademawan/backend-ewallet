@@ -148,6 +148,13 @@ func (cont *TransactionController) CreatePayment() echo.HandlerFunc {
 		var payment PaymentTypeRequest
 		userID := middlewares.ExtractTokenUserID(c)
 
+		c.Bind(&payment)
+		errValidate := c.Validate(&payment)
+
+		if errValidate != nil {
+			return c.JSON(http.StatusBadRequest, common.ResponseUser(http.StatusBadRequest, "There is some problem from input", nil))
+		}
+
 		var result *coreapi.ChargeReq
 		resUser, errUser := cont.userRepo.GetByID(userID)
 		if errUser != nil {
