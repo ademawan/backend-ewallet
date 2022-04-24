@@ -67,7 +67,7 @@ func (ac *TransactionController) Get() echo.HandlerFunc {
 				statusCode = http.StatusNotFound
 				errorMessage = err.Error()
 			}
-			return c.JSON(statusCode, common.ResponseUser(http.StatusNotFound, errorMessage, nil))
+			return c.JSON(statusCode, common.ResponseUser(http.StatusNotFound, errorMessage, res))
 		}
 
 		return c.JSON(http.StatusOK, common.ResponseUser(http.StatusOK, "Success get transaction", res))
