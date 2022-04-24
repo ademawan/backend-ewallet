@@ -170,13 +170,13 @@ func (cont *TransactionController) CreatePayment() echo.HandlerFunc {
 
 				TransactionDetails: midtrans.TransactionDetails{
 					OrderID:  uid,
-					GrossAmt: payment.Amount,
+					GrossAmt: 30000,
 				},
 				Items: &[]midtrans.ItemDetails{
 					{
 						ID:    userID,
 						Name:  resUser.Name,
-						Price: payment.Amount,
+						Price: 30000,
 						Qty:   1,
 					},
 				},
