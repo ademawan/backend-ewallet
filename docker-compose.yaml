@@ -4,11 +4,11 @@ services:
     environment:
       PORT: 8000
       DRIVER: "posgres"
-      ADDRESS: ${{secrets.DB_HOST}}
+      ADDRESS: ${DB_HOST}
       DB_PORT: 5432
-      USERNAME: ${{secrets.DB_USERNAME}}
-      PASSWORD: ${{secrets.DB_PASSWORD}}
-      NAME: ${{secrets.DB_NAME}}
+      USERNAME: ${DB_USERNAME}
+      PASSWORD: ${DB_PASSWORD}
+      NAME: ${DB_NAME}
     restart: always
     ports:
       - 8081:8000
