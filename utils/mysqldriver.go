@@ -2,7 +2,6 @@ package utils
 
 import (
 	"backend-ewallet/configs"
-	"backend-ewallet/entities"
 	"fmt"
 
 	"github.com/labstack/gommon/log"
@@ -33,7 +32,7 @@ func InitDB(config *configs.AppConfig) *gorm.DB {
 	//    postgres://tyenpjggpurdgd:4669642a7071c32c708ceaeaf99680615aed39bfc2712638df1985739b318ef2@ec2-34-194-158-176.compute-1.amazonaws.com:5432/d3514je8tibhi9
 	DBURL := fmt.Sprintf("postgres://%s:%v@%s:%s/%s", config.Database.Username, config.Database.Password, config.Database.Address, config.Database.Port, config.Database.Name)
 	fmt.Println(DBURL)
-	db, err := gorm.Open(postgres.Open("postgres://tyenpjggpurdgd:4669642a7071c32c708ceaeaf99680615aed39bfc2712638df1985739b318ef2@ec2-34-194-158-176.compute-1.amazonaws.com:5432/d3514je8tibhi9"), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open("postgres://tyenpjggpurdgd:4669642a7071c32c708ceaeaf99680615aed39bfc2712638df1985739b318ef2@ec2-34-194-158-176.compute-1.amazonaws.com:5432/d3514je8tibhi9"), &gorm.Config{DisableForeignKeyConstraintWhenMigrating: true})
 	if err != nil {
 		fmt.Printf("Cannot connect to database ")
 	} else {
@@ -52,10 +51,10 @@ func InitDB(config *configs.AppConfig) *gorm.DB {
 }
 
 func InitMigrate(db *gorm.DB) {
-	db.Migrator().DropTable(&entities.Transaction{})
-	db.Migrator().DropTable(&entities.User{})
-	db.AutoMigrate(&entities.User{})
+	// db.Migrator().DropTable(&entities.Transaction{})
+	// db.Migrator().DropTable(&entities.User{})
+	// db.AutoMigrate(&entities.User{})
 
-	db.AutoMigrate(&entities.Transaction{})
+	// db.AutoMigrate(&entities.Transaction{})
 
 }
