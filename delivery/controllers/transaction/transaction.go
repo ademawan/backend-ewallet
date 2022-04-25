@@ -44,8 +44,9 @@ func (ac *TransactionController) Create() echo.HandlerFunc {
 		transaction.SenderID = userID
 
 		res, err_repo := ac.repo.Create(entities.Transaction{
-			SenderID:        transaction.SenderID,
-			RecipientID:     transaction.RecipientID,
+			Sender:          transaction.SenderID,
+			Recipient:       transaction.RecipientID,
+			Amount:          transaction.Amount,
 			TransactionType: transaction.TransactionType,
 		})
 
@@ -55,8 +56,8 @@ func (ac *TransactionController) Create() echo.HandlerFunc {
 
 		response := TransactionCreateResponse{}
 		response.TransactionID = res.TransactionID
-		response.SenderID = res.SenderID
-		response.RecipientID = res.RecipientID
+		response.SenderID = res.Sender
+		response.RecipientID = res.Recipient
 		response.TransactionType = res.TransactionType
 
 		return c.JSON(http.StatusCreated, common.ResponseUser(http.StatusCreated, "Success create transaction", response))
@@ -260,7 +261,7 @@ func (cont *TransactionController) CallBack() echo.HandlerFunc {
 		response := entities.Transaction{}
 		switch request.Transaction_status {
 		case "settlement":
-			res, err := cont.repo.Create(entities.Transaction{SenderID: request.Transaction_id, RecipientID: request.Order_id, TransactionType: "topup", Amount: uint(amount)})
+			res, err := cont.repo.Create(entities.Transaction{Sender: request.Transaction_id, Recipient: request.Order_id, TransactionType: "topup", Amount: uint(amount)})
 			if err != nil {
 				return c.JSON(http.StatusInternalServerError, common.ResponseUser(http.StatusInternalServerError, "try again later", nil))
 
@@ -289,7 +290,7 @@ func (cont *TransactionController) TopUp() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, common.ResponseUser(http.StatusBadRequest, "There is some problem from input", nil))
 		}
 
-		res, err := cont.repo.Create(entities.Transaction{SenderID: "", RecipientID: userID, TransactionType: "topup", Amount: payment.Amount})
+		res, err := cont.repo.Create(entities.Transaction{Sender: "", Recipient: userID, TransactionType: "topup", Amount: payment.Amount})
 
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, common.ResponseUser(http.StatusInternalServerError, "failed topup", nil))
