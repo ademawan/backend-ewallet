@@ -36,15 +36,15 @@ func (ur *TransactionRepository) Create(transaction entities.Transaction) (entit
 			if user.Saldo < transaction.Amount {
 				return errors.New("saldo tidak cukup")
 			} else {
-				if err := tx.Model(entities.User{}).Where("user_id =?", transaction.SenderID).UpdateColumn("saldo", gorm.Expr("saldo - ?", transaction.Amount)).Error; err != nil {
+				if err := tx.Debug().Model(entities.User{}).Where("user_id =?", transaction.SenderID).UpdateColumn("saldo", gorm.Expr("saldo - ?", transaction.Amount)).Error; err != nil {
 					return err
 				}
 
-				if err := tx.Model(entities.User{}).Where("user_id =?", transaction.RecipientID).UpdateColumn("saldo", gorm.Expr("saldo + ?", transaction.Amount)).Error; err != nil {
+				if err := tx.Debug().Model(entities.User{}).Where("user_id =?", transaction.RecipientID).UpdateColumn("saldo", gorm.Expr("saldo + ?", transaction.Amount)).Error; err != nil {
 					return errors.New("transfer failed")
 				}
 
-				if err := tx.Create(&transaction).Error; err != nil {
+				if err := tx.Debug().Create(&transaction).Error; err != nil {
 					return errors.New("transfer failed")
 				}
 			}
@@ -56,12 +56,12 @@ func (ur *TransactionRepository) Create(transaction entities.Transaction) (entit
 	} else if transaction.TransactionType == "topup" {
 		err := ur.database.Transaction(func(tx *gorm.DB) error {
 			var user entities.User
-			result := tx.Model(entities.User{}).Where("user_id=?", transaction.RecipientID).First(&user)
+			result := tx.Debug().Model(entities.User{}).Where("user_id=?", transaction.RecipientID).First(&user)
 			if err := result.Error; err != nil {
 				return err
 			}
 
-			if err := tx.Model(entities.User{}).Where("user_id =?", transaction.RecipientID).UpdateColumn("saldo", gorm.Expr("saldo + ?", transaction.Amount)).Error; err != nil {
+			if err := tx.Debug().Model(entities.User{}).Where("user_id =?", transaction.RecipientID).UpdateColumn("saldo", gorm.Expr("saldo + ?", transaction.Amount)).Error; err != nil {
 				return errors.New("transfer failed")
 			}
 
