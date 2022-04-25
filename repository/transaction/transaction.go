@@ -44,7 +44,7 @@ func (ur *TransactionRepository) Create(transaction entities.Transaction) (entit
 					return errors.New("transfer failed")
 				}
 
-				if err := tx.Debug().Create(&transaction).Error; err != nil {
+				if err := tx.Debug().Model(entities.Transaction{}).Create(&transaction).Error; err != nil {
 					return errors.New("transfer failed")
 				}
 			}
