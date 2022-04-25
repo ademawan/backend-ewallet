@@ -40,7 +40,7 @@ func (ur *TransactionRepository) Create(transaction entities.Transaction) (entit
 					return err
 				}
 
-				if err := ur.TransferAmount(transaction.RecipientID, transaction.Amount); err != nil {
+				if err := tx.Model(entities.User{}).Where("user_id =?", transaction.RecipientID).UpdateColumn("saldo", gorm.Expr("saldo + ?", transaction.Amount)).Error; err != nil {
 					return errors.New("transfer failed")
 				}
 

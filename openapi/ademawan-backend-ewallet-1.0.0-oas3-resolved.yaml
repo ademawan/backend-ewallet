@@ -1,0 +1,686 @@
+---
+openapi: 3.0.2
+info:
+  title: Backend Ewallet
+  description: API Documentation
+  contact:
+    email: ademawan1122@mail.com
+  version: 1.0.0-oas3
+servers:
+- url: https://ademawan.cloud.okteto.net/{entity}
+  variables:
+    entity:
+      default: users
+      enum:
+      - users
+      - transaction
+- url: https://app.swaggerhub.com/apis/ademawan/backend-ewallet/1.0.0-oas3
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: Users
+  description: Users Register/Update/Delete
+- name: Transaction
+  description: Transaction Methods
+paths:
+  /register:
+    post:
+      tags:
+      - Users
+      summary: Register New Users
+      description: Get a New Account
+      requestBody:
+        description: Create Account with valid schema
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/register_body'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+  /login:
+    post:
+      tags:
+      - Users
+      summary: Login user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+        required: true
+      responses:
+        "200":
+          description: User terautorisasi
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+                message: Login successfully
+                data:
+                  user_id: jbeakbfkajlfablbalenvlabvljdvjlbjl
+                  name: test
+                  email: test@mail.com
+                  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        "500":
+          description: Invalid Authorization
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 500
+                message: There are something problem on server
+  /users/me:
+    get:
+      tags:
+      - Users
+      summary: User Profile
+      description: User Profile
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+      security:
+      - bearerAuth: []
+    put:
+      tags:
+      - Users
+      summary: Update By User Token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            example:
+              name: Test Update
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+      security:
+      - bearerAuth: []
+    delete:
+      tags:
+      - Users
+      summary: delete user data
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessSingleResponse'
+              example:
+                code: 200
+                message: success delete user
+      security:
+      - bearerAuth: []
+  /me/transactions:
+    get:
+      tags:
+      - Transaction
+      summary: Get All Transaction
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+    post:
+      tags:
+      - Foods
+      summary: Add / Create Foods Data (Just For Admin)
+      requestBody:
+        description: Create / Add Foods Data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/foods_body'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_4'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500'
+      security:
+      - bearerAuth: []
+  /foods/search/:
+    get:
+      tags:
+      - Foods
+      summary: Get Foods by Name or Calories
+      description: https://ademawan.cloud.okteto.net/foods/search?input=coba || 100 &category=name || calories
+      parameters:
+      - name: Input calories
+        in: query
+        description: get food by calories
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+        example:
+          calories: 500
+      - name: Input name
+        in: query
+        description: get food by name
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+        example:
+          name: banana
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_5'
+      security:
+      - bearerAuth: []
+  /foods/:food_uid:
+    get:
+      tags:
+      - Foods
+      summary: Foods by UID
+      description: foods
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_4'
+      security:
+      - bearerAuth: []
+    put:
+      tags:
+      - Foods
+      summary: Update Foods Data
+      parameters:
+      - name: id
+        in: path
+        description: Foods UID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        description: Update Foods Data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/foods_food_uid_body'
+        required: true
+      responses:
+        "200":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+        "401":
+          description: Authorization Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+              example:
+                code: 401
+                message: Failed User Authorization
+      security:
+      - bearerAuth: []
+    delete:
+      tags:
+      - Foods
+      summary: Delete Foods
+      parameters:
+      - name: id
+        in: path
+        description: ID Rooms
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+                message: success to delete foods
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    UserLogin:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: test@mail.com
+        password: test
+    UserInput:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    SuccessSingleResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/UserInput'
+    register_body:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        phone_number:
+          type: string
+      example:
+        name: test
+        email: test@mail.com
+        password: test
+        phone_number: 8.571234566E9
+    inline_response_200:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/inline_response_200_data'
+      example:
+        code: 200
+        message: Success create user
+        data:
+          user_id: jksfbkjfkjabruablnlab
+          name: test
+          email: test@mail.com
+          phone_number: 8.571234567E9
+    inline_response_400:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/inline_response_400_data'
+      example:
+        code: 400
+        message: There is some problem from input
+    inline_response_200_1:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: Success to get users profile
+        data:
+          $ref: '#/components/schemas/inline_response_200_1_data'
+    inline_response_200_2:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: Success to get users profile
+        data:
+          $ref: '#/components/schemas/inline_response_200_2_data'
+    inline_response_200_3:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/inline_response_200_3_data'
+      example:
+        code: 200
+        message: success to get all foods
+        data:
+        - food_uid: kshefkaefk
+          name: Mangga muda
+          calories: 100
+          energy: 200
+          carbohidrate: 300
+          protein: 400
+          unit: gram
+          unit_value: 2
+          food_categories: fruit
+          image: ""
+        - food_uid: kshefkaefk
+          name: Mangga muda
+          calories: 100
+          energy: 200
+          carbohidrate: 300
+          protein: 400
+          unit: gram
+          unit_value: 2
+          food_categories: fruit
+          image: ""
+    foods_body:
+      type: object
+      properties:
+        name:
+          type: string
+        calories:
+          type: integer
+        category:
+          type: string
+          enum:
+          - fruit
+          - drink
+          - junk food
+          - food
+          - snack
+        image:
+          type: string
+      example:
+        name: Mangga muda
+        calories: 100
+        energy: 200
+        carbohidrate: 300
+        protein: 400
+        unit: gram
+        unit_value: 2
+        food_categories: fruit
+    inline_response_200_4:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/inline_response_200_3_data'
+      example:
+        code: 201
+        message: sukses menambahkan foods baru
+        data:
+          food_uid: kshefkaefk
+          name: Mangga muda
+          calories: 100
+          energy: 200
+          carbohidrate: 300
+          protein: 400
+          unit: gram
+          unit_value: 2
+          food_categories: fruit
+          image: ""
+    inline_response_500:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/inline_response_400_data'
+      example:
+        code: 500
+        message: Something Error on Server
+    inline_response_200_5:
+      type: object
+      properties:
+        code:
+          type: integer
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/inline_response_200_3_data'
+      example:
+        code: 200
+        message: Berhasil mendapatkan data foods
+        data:
+        - food_uid: kshefkaefk
+          name: Mangga muda
+          calories: 100
+          energy: 200
+          carbohidrate: 300
+          protein: 400
+          unit: gram
+          unit_value: 2
+          food_categories: fruit
+          image: ""
+        - food_uid: kshefkaefk
+          name: Mangga muda
+          calories: 100
+          energy: 200
+          carbohidrate: 300
+          protein: 400
+          unit: gram
+          unit_value: 2
+          food_categories: fruit
+          image: ""
+    foods_food_uid_body:
+      type: object
+      properties:
+        name:
+          type: integer
+        calories:
+          type: string
+      example:
+        name: Bakso
+        calories: 312
+    inline_response_401:
+      type: object
+      properties:
+        code:
+          type: integer
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+    inline_response_200_data:
+      type: object
+      properties:
+        user_uid:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        phone_number:
+          type: string
+      example: null
+    inline_response_400_data:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+      example: null
+    inline_response_200_1_data:
+      type: object
+      properties:
+        user_id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+          format: password
+        phone_number:
+          type: string
+        saldo:
+          type: integer
+        created_at:
+          type: string
+      example: '{"user_id":"jksfbkjfkjabruablnlab","name":"test","email":"test@mail.com","phone_number":"085798765432","saldo":50000,"created_at":"2022-04-24T23:19:11.157588Z"}'
+    inline_response_200_2_data:
+      type: object
+      properties:
+        user_id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+          format: password
+        phone_number:
+          type: string
+        saldo:
+          type: integer
+        created_at:
+          type: string
+      example: '{"user_id":"jksfbkjfkjabruablnlab","name":"Test Update","email":"test@mail.com","phone_number":"085798765432","saldo":50000,"created_at":"2022-04-24T23:19:11.157588Z"}'
+    inline_response_200_3_data:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        calories:
+          type: integer
+        category:
+          type: string
+          enum:
+          - fruit
+          - drink
+          - junk food
+          - food
+          - snack
+        image:
+          type: string
+      example: null
+  responses:
+    "204":
+      description: Failed to Update
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 204
+              message:
+                type: string
+                example: No data for Update
+              data:
+                type: object
+    "400":
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_400'
+    "401":
+      description: Authorization Failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 401
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: invalid Email or password
+              data:
+                type: object
+                example:
+                  token: {}
+    "500":
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_500'
+  parameters:
+    UserID:
+      name: id
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: integer
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
