@@ -20,7 +20,7 @@ func New(db *gorm.DB) *TransactionRepository {
 
 func (ur *TransactionRepository) Create(transaction entities.Transaction) (entities.Transaction, error) {
 	if transaction.Amount <= 0 {
-		return entities.Transaction{}, errors.New("transfer failed")
+		return entities.Transaction{}, errors.New("transfer cobalagi")
 	}
 
 	uid := shortuuid.New()
@@ -41,7 +41,7 @@ func (ur *TransactionRepository) Create(transaction entities.Transaction) (entit
 				}
 
 				if err := tx.Debug().Model(entities.User{}).Where("user_id =?", transaction.RecipientID).UpdateColumn("saldo", gorm.Expr("saldo + ?", transaction.Amount)).Error; err != nil {
-					return errors.New("transfer failed")
+					return errors.New("transfer gagal")
 				}
 
 				if err := tx.Debug().Model(entities.Transaction{}).Create(&transaction).Error; err != nil {
