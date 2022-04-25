@@ -19,7 +19,7 @@ func New(db *gorm.DB) *TransactionRepository {
 }
 
 func (ur *TransactionRepository) Create(transaction entities.Transaction) (entities.Transaction, error) {
-	if transaction.Amount <= 0 {
+	if transaction.Amount <= uint(0) {
 		return entities.Transaction{}, errors.New("transfer cobalagi")
 	}
 
