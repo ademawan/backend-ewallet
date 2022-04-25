@@ -3,6 +3,7 @@ package transaction
 import (
 	"backend-ewallet/entities"
 	"errors"
+	"fmt"
 
 	"github.com/lithammer/shortuuid"
 	"gorm.io/gorm"
@@ -40,8 +41,9 @@ func (ur *TransactionRepository) Create(transaction entities.Transaction) (entit
 				if err := tx.Debug().Model(entities.User{}).Where("user_id =?", transaction.Recipient).UpdateColumn("saldo", gorm.Expr("saldo + ?", transaction.Amount)).Error; err != nil {
 					return errors.New("transfer gagal")
 				}
+				sql := fmt.Sprintf("INSERT INTO transactions ('transaction_id','sender','recipient','transaction_type','amount','created_at','deleted_at') VALUES ('%s','%s','%s','transfer',%d,'%s',NULL)", transaction.TransactionID, transaction.Sender, transaction.Recipient, transaction.Amount, transaction.CreatedAt)
 
-				if err := tx.Debug().Create(&transaction).Error; err != nil {
+				if err := tx.Raw(sql).Scan(&transaction); err != nil {
 					return errors.New("transfer failed")
 				}
 			}
