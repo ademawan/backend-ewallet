@@ -49,7 +49,7 @@ func (ur *UserRepository) GetByID(userID string) (entities.User, error) {
 func (ur *UserRepository) Update(userUid string, newUser entities.User) (entities.User, error) {
 
 	var user entities.User
-	result := ur.database.Where("user_uid =?", userUid).First(&user)
+	result := ur.database.Where("user_id =?", userUid).First(&user)
 
 	if result.Error != nil {
 		return entities.User{}, errors.New("failed to update user")
@@ -58,7 +58,7 @@ func (ur *UserRepository) Update(userUid string, newUser entities.User) (entitie
 		return entities.User{}, errors.New("user not found")
 	}
 
-	if err := ur.database.Model(&user).Where("user_uid =?", userUid).Updates(&newUser).Error; err != nil {
+	if err := ur.database.Model(&user).Where("user_id =?", userUid).Updates(&newUser).Error; err != nil {
 		return entities.User{}, err
 	}
 
@@ -67,7 +67,7 @@ func (ur *UserRepository) Update(userUid string, newUser entities.User) (entitie
 
 func (ur *UserRepository) Delete(userUid string) error {
 
-	result := ur.database.Where("user_uid =?", userUid).Delete(&entities.User{})
+	result := ur.database.Where("user_id =?", userUid).Delete(&entities.User{})
 	if result.Error != nil {
 		return result.Error
 	}
