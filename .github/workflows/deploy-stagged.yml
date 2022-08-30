@@ -42,7 +42,7 @@ jobs:
         namespace: ademawan
         
     - name: "create deployment"
-      uses: okteto/apply@master
+      uses: okteto/apply@latest
       with:
         manifest: ./deployment/app-pod.yaml
     
