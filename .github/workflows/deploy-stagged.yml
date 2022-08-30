@@ -32,7 +32,7 @@ jobs:
       uses: actions/checkout@master
       
     - name: Login Okteto
-      uses: okteto/login@latest
+      uses: okteto/login@master
       with:
         token: ${{ secrets.OKTETO_TOKEN }}
     
