@@ -56,9 +56,9 @@ func initConfig() *AppConfig {
 	defaultConfig.GoogleClientID = os.Getenv("GOOGLE_CLIENT_ID")
 	defaultConfig.GoogleClientSecret = os.Getenv("GOOGLE_CLIENT_SECRET")
 
-	fmt.Println("kube =", os.Getenv("KUBE_CONFIG"))
+	// fmt.Println("kube =", os.Getenv("KUBE_CONFIG"))
 
-	log.Info(defaultConfig)
+	// log.Info(defaultConfig)
 
 	return &defaultConfig
 }
