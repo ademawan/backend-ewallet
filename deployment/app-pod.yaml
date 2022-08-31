@@ -17,23 +17,6 @@ spec:
       containers:
       - image: mawan1122/backend-ewallet-hub:latest
         name: go-app
-        env:
-          - name: "PORT"
-            value: "8000"
-          - name: "DRIVER"
-            value: "postgres"
-          - name: "ADDRESS"
-            value: ${DB_HOST}
-          - name: "DB_PORT"
-            value: "5432"
-          - name: "USERNAME"
-            value: ${DB_USERNAME}
-          - name: "PASSWORD"
-            value: ${DB_PASSWORD}
-          - name: "NAME"
-            value: ${DB_NAME}
-          - name: "LOC"
-            value: "Asia%2FJakarta"    
         ports:
            - containerPort: 8000
 ---
