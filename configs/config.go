@@ -56,6 +56,8 @@ func initConfig() *AppConfig {
 	defaultConfig.GoogleClientID = os.Getenv("GOOGLE_CLIENT_ID")
 	defaultConfig.GoogleClientSecret = os.Getenv("GOOGLE_CLIENT_SECRET")
 
+	fmt.Println(os.Getenv("POSTGRES_URL"))
+
 	log.Info(defaultConfig)
 
 	return &defaultConfig

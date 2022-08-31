@@ -17,6 +17,9 @@ spec:
       containers:
       - image: mawan1122/backend-ewallet-hub:latest
         name: go-app
+        env:
+          - name: "POSTGRES_URL"
+            value: ${{ secrets.POSTGRES_URL }}
         ports:
            - containerPort: 8000
 ---
