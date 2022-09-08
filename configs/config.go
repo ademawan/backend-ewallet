@@ -58,7 +58,7 @@ func initConfig() *AppConfig {
 
 	// fmt.Println("kube =", os.Getenv("KUBE_CONFIG"))
 
-	// log.Info(defaultConfig)
+	log.Info(defaultConfig)
 
 	return &defaultConfig
 }
